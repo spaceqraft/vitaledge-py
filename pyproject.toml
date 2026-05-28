@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=42"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "vitaledge"
+version = "0.1.0"
+description = "Python client library for the VitalEdge graph database"
+requires-python = ">=3.10"
+dependencies = [
+    "grpcio>=1.60.0",
+    "protobuf>=5.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "grpcio-tools>=1.60.0",
+    "pytest>=8.0",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["vitaledge*"]
