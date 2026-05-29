@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import json
 from collections.abc import Mapping
 import grpc
 
@@ -168,9 +167,14 @@ class VitalEdgeClient:
         timeout: float | None = None,
     ) -> QueryResult:
         """Execute a Cypher query and return a QueryResult."""
-        bound_cypher = _bind_cypher_parameters(cypher, parameters)
+        proto_params = (
+            {name: _python_to_proto_value(v) for name, v in parameters.items()}
+            if parameters
+            else {}
+        )
         request = self._build_request(
-            bound_cypher,
+            cypher,
+            parameters=proto_params,
             tenant=tenant,
             read_only=read_only,
             include_stats=include_stats,
@@ -206,6 +210,7 @@ class VitalEdgeClient:
         self,
         cypher: str,
         *,
+        parameters: dict | None = None,
         tenant: str | None = None,
         read_only: bool = False,
         include_stats: bool = False,
@@ -224,6 +229,7 @@ class VitalEdgeClient:
                 sdk_version=_SDK_VERSION,
                 protocol_version=_PROTOCOL_VERSION,
             ),
+            parameters=parameters or {},
         )
 
     def __repr__(self) -> str:
@@ -234,6 +240,35 @@ class VitalEdgeClient:
 # ---------------------------------------------------------------------------
 # Internal helpers
 # ---------------------------------------------------------------------------
+
+def _python_to_proto_value(v: object) -> query_pb2.Value:
+    """Convert a Python value to the proto Value type for parameter binding."""
+    if v is None:
+        return query_pb2.Value(null_value=query_pb2.NullValue())
+    if isinstance(v, bool):
+        return query_pb2.Value(bool_value=v)
+    if isinstance(v, int):
+        return query_pb2.Value(int_value=v)
+    if isinstance(v, float):
+        return query_pb2.Value(double_value=v)
+    if isinstance(v, str):
+        return query_pb2.Value(string_value=v)
+    if isinstance(v, bytes):
+        return query_pb2.Value(bytes_value=v)
+    if isinstance(v, (list, tuple)):
+        return query_pb2.Value(
+            list_value=query_pb2.ListValue(
+                values=[_python_to_proto_value(item) for item in v]
+            )
+        )
+    if isinstance(v, Mapping):
+        return query_pb2.Value(
+            map_value=query_pb2.MapValue(
+                values={k: _python_to_proto_value(mv) for k, mv in v.items()}
+            )
+        )
+    raise TypeError(f"Unsupported parameter type: {type(v).__name__}")
+
 
 def _value_to_python(v: query_pb2.Value):
     kind = v.WhichOneof("kind")
@@ -258,36 +293,4 @@ def _row_to_dict(row: query_pb2.Row) -> dict:
     return {k: _value_to_python(v) for k, v in row.values.items()}
 
 
-def _bind_cypher_parameters(
-    cypher: str, parameters: Mapping[str, object] | None
-) -> str:
-    if not parameters:
-        return cypher
 
-    rendered = cypher
-    # Replace longest parameter names first to avoid partial overlaps.
-    for name in sorted(parameters.keys(), key=len, reverse=True):
-        rendered = rendered.replace(f"${name}", _cypher_literal(parameters[name]))
-    return rendered
-
-
-def _cypher_literal(value: object) -> str:
-    if value is None:
-        return "NULL"
-    if isinstance(value, bool):
-        return "true" if value else "false"
-    if isinstance(value, (int, float)):
-        return str(value)
-    if isinstance(value, str):
-        return json.dumps(value)
-    if isinstance(value, (list, tuple)):
-        return "[" + ", ".join(_cypher_literal(item) for item in value) + "]"
-    if isinstance(value, Mapping):
-        parts = []
-        for k, v in value.items():
-            if not isinstance(k, str):
-                raise TypeError("Cypher map parameter keys must be strings")
-            parts.append(f"{k}: {_cypher_literal(v)}")
-        return "{" + ", ".join(parts) + "}"
-
-    raise TypeError(f"Unsupported Cypher parameter type: {type(value).__name__}")

@@ -63,3 +63,6 @@ env/
 # OS files
 .DS_Store
 Thumbs.db
+
+# exclude external datasets used in examples
+examples/cyberfeddefender_dataset.csv

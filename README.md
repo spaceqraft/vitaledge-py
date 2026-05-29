@@ -43,6 +43,53 @@ with VitalEdgeClient(host="localhost", port=7443, tenant="default") as client:
 
 See [examples/basic_usage.py](examples/basic_usage.py) for a runnable version.
 
+## Advanced Example: VitalEdge Cyber Threat Detection
+
+An advanced threat-detection example is provided in
+[examples/advanced_cyber_threat_detection.py](examples/advanced_cyber_threat_detection.py).
+
+This example performs detection with VitalEdge graph analytics (Cypher queries)
+using traffic features only. The dataset columns `Attack_Type` and `Label` are
+held out from detection and used only for post-hoc evaluation and comparison.
+
+Dataset:
+- https://www.kaggle.com/datasets/hussainsheikh03/cyber-threat-detection
+
+Why this example is useful:
+- Models network traffic as a graph (`Host` -> `Flow` -> `Host`) and runs graph-native hunting queries
+- Computes protocol-relative anomaly scores directly in Cypher
+- Uses held-out labels only for post-hoc evaluation (prevents label leakage)
+- Demonstrates parameterized queries and consolidated analytics calls
+
+Run:
+
+```bash
+python examples/advanced_cyber_threat_detection.py \
+    --csv /path/to/cyberfeddefender_dataset.csv \
+    --host localhost --port 7443 --tenant default
+```
+
+In order to obtain the dataset file, refer to the corresponding kaggle:
+https://www.kaggle.com/datasets/hussainsheikh03/cyber-threat-detection
+
+```bash
+python examples/advanced_cyber_threat_detection.py \
+    --csv examples/cyberfeddefender_dataset.csv \
+    --host localhost --port 7443 --tenant default
+```
+
+Optional controls:
+- `--threshold` adjusts sensitivity for `detected_malicious` classification
+- `--batch-size` controls ingest write size
+- `--limit` controls printed result rows per query
+
+Expected output sections:
+- `Top Suspicious Sources`
+- `Possible Lateral Movement`
+- `Destination Concentration`
+- `Evaluation vs Held-Out Labels`
+- `Attack-Type Comparison (Post-Hoc Only)`
+
 ## Parameterized Query Example
 
 ```python
