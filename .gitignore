@@ -65,4 +65,4 @@ env/
 Thumbs.db
 
 # exclude external datasets used in examples
-examples/cyberfeddefender_dataset.csv
+examples/*.csv

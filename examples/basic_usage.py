@@ -1,9 +1,12 @@
 """Basic usage example for the VitalEdge Python client."""
 
+import datetime
+import json
+
 from vitaledge import VitalEdgeClient
 
 # Connect to a local VitalEdge instance (gRPC on port 7443)
-with VitalEdgeClient(host="localhost", port=7443, tenant="default") as client:
+with VitalEdgeClient(host="localhost", port=7443, tenant="basic_example") as client:
     # Check server capabilities
     caps = client.get_capabilities()
     print(f"Protocol version : {caps.protocol_version}")
@@ -11,32 +14,42 @@ with VitalEdgeClient(host="localhost", port=7443, tenant="default") as client:
     print(f"Prepared queries : {caps.prepared_query_supported}")
     print()
 
+    # Create some sample data
+    client.execute(
+        """CREATE (a:Person {name: 'Alice', age: 30})
+           CREATE (b:Person {name: 'Bob', age: 52})
+           CREATE (c:Person {name: 'Charlie', age: 42})
+           CREATE (a)-[:KNOWS]->(b)"""
+    )
+
     # Execute a simple Cypher query
     result = client.execute(
-        "MATCH (n) RETURN n LIMIT 5",
-        include_stats=True,
+        "MATCH (p:Person) RETURN p LIMIT 5"
     )
     print(f"Columns : {result.columns}")
     for row in result.rows:
         print(row)
-    print(f"Stats   : {result.stats}")
 
     # Explain a query
-    plan = client.explain("MATCH (n)-[r]->(m) RETURN n, r, m LIMIT 10")
-    import json
-    print(json.loads(plan.explain_json))
+    plan = client.explain("""MATCH (p1:Person)-[r:KNOWS]->(p2:PERSON)
+                          RETURN p1, r, p2
+                          LIMIT 10""")
+    print(json.dumps(json.loads(plan.explain_json), indent=2))
 
+    # Execute a parameterized query
     query = """
-    MATCH (:Movie {title: $movieTitle})<-[r:ACTED_IN]-(p:Person)
-    WHERE r.role CONTAINS $actorRole
-    RETURN p.name AS actor, r.role AS role
+    MATCH (p:Person {name: $personName})
+    RETURN p.name, $thisYear - p.age AS year_of_birth
     """
 
     parameters = {
-        "movieTitle": "Wall Street",
-        "actorRole": "Fox",
+        "personName": "Bob",
+        "thisYear": datetime.datetime.now().year,
     }
 
-    result = client.execute(query, parameters=parameters, include_stats=True)
+    result = client.execute(query, parameters=parameters)
     for row in result.rows:
-        print(f"actor: {row['actor']}, role: {row['role']}")
+        print(f"{row['p.name']} was born in {row['year_of_birth']}")
+
+    # Clean up
+    client.execute("MATCH (p:Person) DETACH DELETE p")

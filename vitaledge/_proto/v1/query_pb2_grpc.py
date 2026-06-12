@@ -49,6 +49,11 @@ class QueryServiceStub(object):
                 request_serializer=vitaledge_dot_v1_dot_query__pb2.CapabilitiesRequest.SerializeToString,
                 response_deserializer=vitaledge_dot_v1_dot_query__pb2.CapabilitiesResponse.FromString,
                 _registered_method=True)
+        self.CreatePropertyIndex = channel.unary_unary(
+                '/vitaledge.v1.QueryService/CreatePropertyIndex',
+                request_serializer=vitaledge_dot_v1_dot_query__pb2.CreatePropertyIndexRequest.SerializeToString,
+                response_deserializer=vitaledge_dot_v1_dot_query__pb2.CreatePropertyIndexResponse.FromString,
+                _registered_method=True)
 
 
 class QueryServiceServicer(object):
@@ -72,6 +77,12 @@ class QueryServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def CreatePropertyIndex(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_QueryServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -89,6 +100,11 @@ def add_QueryServiceServicer_to_server(servicer, server):
                     servicer.GetCapabilities,
                     request_deserializer=vitaledge_dot_v1_dot_query__pb2.CapabilitiesRequest.FromString,
                     response_serializer=vitaledge_dot_v1_dot_query__pb2.CapabilitiesResponse.SerializeToString,
+            ),
+            'CreatePropertyIndex': grpc.unary_unary_rpc_method_handler(
+                    servicer.CreatePropertyIndex,
+                    request_deserializer=vitaledge_dot_v1_dot_query__pb2.CreatePropertyIndexRequest.FromString,
+                    response_serializer=vitaledge_dot_v1_dot_query__pb2.CreatePropertyIndexResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -172,6 +188,33 @@ class QueryService(object):
             '/vitaledge.v1.QueryService/GetCapabilities',
             vitaledge_dot_v1_dot_query__pb2.CapabilitiesRequest.SerializeToString,
             vitaledge_dot_v1_dot_query__pb2.CapabilitiesResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def CreatePropertyIndex(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/vitaledge.v1.QueryService/CreatePropertyIndex',
+            vitaledge_dot_v1_dot_query__pb2.CreatePropertyIndexRequest.SerializeToString,
+            vitaledge_dot_v1_dot_query__pb2.CreatePropertyIndexResponse.FromString,
             options,
             channel_credentials,
             insecure,

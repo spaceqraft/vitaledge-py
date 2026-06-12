@@ -10,7 +10,7 @@ https://www.kaggle.com/datasets/hussainsheikh03/cyber-threat-detection
 Usage:
     python examples/advanced_cyber_threat_detection.py \
         --csv /path/to/cyberfeddefender_dataset.csv \
-        --host localhost --port 7443 --tenant default
+        --host localhost --port 7443 --tenant cyberthreat
 """
 
 from __future__ import annotations
@@ -84,7 +84,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--csv", type=Path, required=True, help="Path to Kaggle CSV file")
     parser.add_argument("--host", default="localhost", help="VitalEdge host")
     parser.add_argument("--port", type=int, default=7443, help="VitalEdge gRPC port")
-    parser.add_argument("--tenant", default="default", help="VitalEdge tenant")
+    parser.add_argument("--tenant", default="cyberthreat", help="VitalEdge tenant")
     parser.add_argument(
         "--batch-size",
         type=int,
@@ -172,15 +172,15 @@ def _chunks(items: list[FlowRecord], size: int) -> Iterable[list[FlowRecord]]:
         yield items[start : start + size]
 
 
-def reset_graph(client: VitalEdgeClient, tenant: str) -> None:
+def reset_graph(client: VitalEdgeClient) -> None:
     reset_query = """
     MATCH (f:Host|Flow)
     DETACH DELETE f
     """
-    client.execute(reset_query, tenant=tenant)
+    client.execute(reset_query)
 
 
-def ingest_flows(client: VitalEdgeClient, tenant: str, records: list[FlowRecord], batch_size: int) -> None:
+def ingest_flows(client: VitalEdgeClient, records: list[FlowRecord], batch_size: int) -> None:
     ingest_query = """
     UNWIND $events AS e
     MERGE (src:Host {ip: e.source_ip})
@@ -216,12 +216,11 @@ def ingest_flows(client: VitalEdgeClient, tenant: str, records: list[FlowRecord]
 
     for batch in _chunks(records, batch_size):
         payload = [r.__dict__ for r in batch]
-        client.execute(ingest_query, parameters={"events": payload}, tenant=tenant)
+        client.execute(ingest_query, parameters={"events": payload})
 
 
 def score_threats(
     client: VitalEdgeClient,
-    tenant: str,
     threshold: float,
     records: list[FlowRecord],
 ) -> None:
@@ -266,7 +265,7 @@ def score_threats(
             f.model_version = "vitaledge-rulegraph-v3-cypher-anomaly"
     RETURN count(f) AS updated_flows
     """
-    client.execute(update_query, parameters={"threshold": threshold}, tenant=tenant)
+    client.execute(update_query, parameters={"threshold": threshold})
 
 
 def print_rows(title: str, rows: list[dict]) -> None:
@@ -278,7 +277,7 @@ def print_rows(title: str, rows: list[dict]) -> None:
         print(row)
 
 
-def run_hunting_queries(client: VitalEdgeClient, tenant: str, limit: int) -> None:
+def run_hunting_queries(client: VitalEdgeClient, limit: int) -> None:
     limit_value = max(1, int(limit))
     hunting_query = """
     MATCH (src:Host)-[:SENT]->(f:Flow)
@@ -336,7 +335,6 @@ def run_hunting_queries(client: VitalEdgeClient, tenant: str, limit: int) -> Non
     rows = client.execute(
         hunting_query,
         parameters={"limit_value": limit_value},
-        tenant=tenant,
         include_stats=True,
     ).rows
 
@@ -381,7 +379,7 @@ def run_hunting_queries(client: VitalEdgeClient, tenant: str, limit: int) -> Non
     print_rows("Destination Concentration", grouped["Destination Concentration"])
 
 
-def evaluate_against_labels(client: VitalEdgeClient, tenant: str, limit: int) -> None:
+def evaluate_against_labels(client: VitalEdgeClient, limit: int) -> None:
     limit_value = max(1, int(limit))
     confusion_query = """
     MATCH (f:Flow)
@@ -391,7 +389,7 @@ def evaluate_against_labels(client: VitalEdgeClient, tenant: str, limit: int) ->
       sum(CASE WHEN f.detected_malicious = false AND f.label = 1 THEN 1 ELSE 0 END) AS fn,
       sum(CASE WHEN f.detected_malicious = false AND f.label = 0 THEN 1 ELSE 0 END) AS tn
     """
-    confusion_rows = client.execute(confusion_query, tenant=tenant).rows
+    confusion_rows = client.execute(confusion_query).rows
     confusion = []
     if confusion_rows:
         row = confusion_rows[0]
@@ -419,7 +417,7 @@ def evaluate_against_labels(client: VitalEdgeClient, tenant: str, limit: int) ->
     ORDER BY avg_score DESC
     """
 
-    attack_rows = client.execute(attack_summary_query, tenant=tenant).rows
+    attack_rows = client.execute(attack_summary_query).rows
 
     breakdown = []
     for row in attack_rows[:limit_value]:
@@ -450,14 +448,14 @@ def main() -> None:
     with VitalEdgeClient(host=args.host, port=args.port, tenant=args.tenant) as client:
         print(f"Loaded {len(records)} flow rows from {args.csv}")
         print("Resetting graph and ingesting flow data...")
-        reset_graph(client, args.tenant)
-        ingest_flows(client, args.tenant, records, args.batch_size)
+        reset_graph(client)
+        ingest_flows(client, records, args.batch_size)
 
         print("Scoring threats in VitalEdge (without Attack_Type/Label features)...")
-        score_threats(client, args.tenant, args.threshold, records)
+        score_threats(client, args.threshold, records)
 
-        run_hunting_queries(client, args.tenant, args.limit)
-        evaluate_against_labels(client, args.tenant, args.limit)
+        run_hunting_queries(client, args.limit)
+        evaluate_against_labels(client, args.limit)
 
 
 if __name__ == "__main__":

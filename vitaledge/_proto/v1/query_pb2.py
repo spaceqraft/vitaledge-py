@@ -24,14 +24,14 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x18vitaledge/v1/query.proto\x12\x0cvitaledge.v1\"\xab\x02\n\x0cQueryRequest\x12\x0e\n\x06tenant\x18\x01 \x01(\t\x12\'\n\x05input\x18\x02 \x01(\x0b\x32\x18.vitaledge.v1.QueryInput\x12-\n\x07options\x18\x03 \x01(\x0b\x32\x1c.vitaledge.v1.RequestOptions\x12+\n\x06\x63lient\x18\x04 \x01(\x0b\x32\x1b.vitaledge.v1.ClientContext\x12>\n\nparameters\x18\x05 \x03(\x0b\x32*.vitaledge.v1.QueryRequest.ParametersEntry\x1a\x46\n\x0fParametersEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\"\n\x05value\x18\x02 \x01(\x0b\x32\x13.vitaledge.v1.Value:\x02\x38\x01\"W\n\nQueryInput\x12\x10\n\x06\x63ypher\x18\x01 \x01(\tH\x00\x12/\n\x08prepared\x18\x02 \x01(\x0b\x32\x1b.vitaledge.v1.PreparedQueryH\x00\x42\x06\n\x04kind\"z\n\rPreparedQuery\x12\x16\n\x0eparser_version\x18\x01 \x01(\t\x12\x12\n\nir_version\x18\x02 \x01(\t\x12\x13\n\x0b\x66ingerprint\x18\x03 \x01(\t\x12\x0f\n\x07payload\x18\x04 \x01(\x0c\x12\x17\n\x0f\x66\x61llback_cypher\x18\x05 \x01(\t\"v\n\x0eRequestOptions\x12\x11\n\tread_only\x18\x01 \x01(\x08\x12\x15\n\rinclude_stats\x18\x02 \x01(\x08\x12\x18\n\x10include_warnings\x18\x03 \x01(\x08\x12 \n\x18\x61llow_fallback_to_cypher\x18\x04 \x01(\x08\"T\n\rClientContext\x12\x14\n\x0csdk_language\x18\x01 \x01(\t\x12\x13\n\x0bsdk_version\x18\x02 \x01(\t\x12\x18\n\x10protocol_version\x18\x03 \x01(\t\"\x96\x01\n\rQueryResponse\x12\x0f\n\x07\x63olumns\x18\x01 \x03(\t\x12\x1f\n\x04rows\x18\x02 \x03(\x0b\x32\x11.vitaledge.v1.Row\x12\'\n\x05stats\x18\x03 \x01(\x0b\x32\x18.vitaledge.v1.QueryStats\x12*\n\x08warnings\x18\x04 \x03(\x0b\x32\x18.vitaledge.v1.Diagnostic\"|\n\x0f\x45xplainResponse\x12\x14\n\x0c\x65xplain_json\x18\x01 \x01(\x0c\x12\'\n\x05stats\x18\x02 \x01(\x0b\x32\x18.vitaledge.v1.QueryStats\x12*\n\x08warnings\x18\x03 \x03(\x0b\x32\x18.vitaledge.v1.Diagnostic\"8\n\nQueryStats\x12\x15\n\rrows_returned\x18\x01 \x01(\x03\x12\x13\n\x0b\x64uration_ms\x18\x02 \x01(\x03\"+\n\nDiagnostic\x12\x0c\n\x04\x63ode\x18\x01 \x01(\t\x12\x0f\n\x07message\x18\x02 \x01(\t\"\x15\n\x13\x43\x61pabilitiesRequest\"\x9b\x01\n\x14\x43\x61pabilitiesResponse\x12\x18\n\x10protocol_version\x18\x01 \x01(\t\x12\x17\n\x0fparser_versions\x18\x02 \x03(\t\x12\x13\n\x0bir_versions\x18\x03 \x03(\t\x12 \n\x18prepared_query_supported\x18\x04 \x01(\x08\x12\x19\n\x11parameter_binding\x18\x05 \x01(\t\"x\n\x03Row\x12-\n\x06values\x18\x01 \x03(\x0b\x32\x1d.vitaledge.v1.Row.ValuesEntry\x1a\x42\n\x0bValuesEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\"\n\x05value\x18\x02 \x01(\x0b\x32\x13.vitaledge.v1.Value:\x02\x38\x01\"\x8c\x02\n\x05Value\x12\x14\n\nbool_value\x18\x01 \x01(\x08H\x00\x12\x13\n\tint_value\x18\x02 \x01(\x03H\x00\x12\x16\n\x0c\x64ouble_value\x18\x03 \x01(\x01H\x00\x12\x16\n\x0cstring_value\x18\x04 \x01(\tH\x00\x12\x15\n\x0b\x62ytes_value\x18\x05 \x01(\x0cH\x00\x12-\n\nlist_value\x18\x06 \x01(\x0b\x32\x17.vitaledge.v1.ListValueH\x00\x12+\n\tmap_value\x18\x07 \x01(\x0b\x32\x16.vitaledge.v1.MapValueH\x00\x12-\n\nnull_value\x18\x08 \x01(\x0b\x32\x17.vitaledge.v1.NullValueH\x00\x42\x06\n\x04kind\"0\n\tListValue\x12#\n\x06values\x18\x01 \x03(\x0b\x32\x13.vitaledge.v1.Value\"\x82\x01\n\x08MapValue\x12\x32\n\x06values\x18\x01 \x03(\x0b\x32\".vitaledge.v1.MapValue.ValuesEntry\x1a\x42\n\x0bValuesEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\"\n\x05value\x18\x02 \x01(\x0b\x32\x13.vitaledge.v1.Value:\x02\x38\x01\"\x0b\n\tNullValue2\xf2\x01\n\x0cQueryService\x12\x42\n\x07\x45xecute\x12\x1a.vitaledge.v1.QueryRequest\x1a\x1b.vitaledge.v1.QueryResponse\x12\x44\n\x07\x45xplain\x12\x1a.vitaledge.v1.QueryRequest\x1a\x1d.vitaledge.v1.ExplainResponse\x12X\n\x0fGetCapabilities\x12!.vitaledge.v1.CapabilitiesRequest\x1a\".vitaledge.v1.CapabilitiesResponseB7Z5github.com/paegun/vitaledge/api/proto/vitaledge/v1;v1b\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x18vitaledge/v1/query.proto\x12\x0cvitaledge.v1\"\xab\x02\n\x0cQueryRequest\x12\x0e\n\x06tenant\x18\x01 \x01(\t\x12\'\n\x05input\x18\x02 \x01(\x0b\x32\x18.vitaledge.v1.QueryInput\x12-\n\x07options\x18\x03 \x01(\x0b\x32\x1c.vitaledge.v1.RequestOptions\x12+\n\x06\x63lient\x18\x04 \x01(\x0b\x32\x1b.vitaledge.v1.ClientContext\x12>\n\nparameters\x18\x05 \x03(\x0b\x32*.vitaledge.v1.QueryRequest.ParametersEntry\x1a\x46\n\x0fParametersEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\"\n\x05value\x18\x02 \x01(\x0b\x32\x13.vitaledge.v1.Value:\x02\x38\x01\"W\n\nQueryInput\x12\x10\n\x06\x63ypher\x18\x01 \x01(\tH\x00\x12/\n\x08prepared\x18\x02 \x01(\x0b\x32\x1b.vitaledge.v1.PreparedQueryH\x00\x42\x06\n\x04kind\"z\n\rPreparedQuery\x12\x16\n\x0eparser_version\x18\x01 \x01(\t\x12\x12\n\nir_version\x18\x02 \x01(\t\x12\x13\n\x0b\x66ingerprint\x18\x03 \x01(\t\x12\x0f\n\x07payload\x18\x04 \x01(\x0c\x12\x17\n\x0f\x66\x61llback_cypher\x18\x05 \x01(\t\"\x97\x01\n\x0eRequestOptions\x12\x11\n\tread_only\x18\x01 \x01(\x08\x12\x15\n\rinclude_stats\x18\x02 \x01(\x08\x12\x18\n\x10include_warnings\x18\x03 \x01(\x08\x12 \n\x18\x61llow_fallback_to_cypher\x18\x04 \x01(\x08\x12\x1f\n\x17strict_variant_dispatch\x18\x05 \x01(\x08\"T\n\rClientContext\x12\x14\n\x0csdk_language\x18\x01 \x01(\t\x12\x13\n\x0bsdk_version\x18\x02 \x01(\t\x12\x18\n\x10protocol_version\x18\x03 \x01(\t\"\x96\x01\n\rQueryResponse\x12\x0f\n\x07\x63olumns\x18\x01 \x03(\t\x12\x1f\n\x04rows\x18\x02 \x03(\x0b\x32\x11.vitaledge.v1.Row\x12\'\n\x05stats\x18\x03 \x01(\x0b\x32\x18.vitaledge.v1.QueryStats\x12*\n\x08warnings\x18\x04 \x03(\x0b\x32\x18.vitaledge.v1.Diagnostic\"|\n\x0f\x45xplainResponse\x12\x14\n\x0c\x65xplain_json\x18\x01 \x01(\x0c\x12\'\n\x05stats\x18\x02 \x01(\x0b\x32\x18.vitaledge.v1.QueryStats\x12*\n\x08warnings\x18\x03 \x03(\x0b\x32\x18.vitaledge.v1.Diagnostic\"\xb0\x01\n\nQueryStats\x12\x15\n\rrows_returned\x18\x01 \x01(\x03\x12\x13\n\x0b\x64uration_ms\x18\x02 \x01(\x03\x12(\n configured_max_write_batch_bytes\x18\x03 \x01(\x03\x12\'\n\x1f\x65\x66\x66\x65\x63tive_max_write_batch_bytes\x18\x04 \x01(\x03\x12#\n\x1bmax_write_batch_bytes_tuned\x18\x05 \x01(\x08\"+\n\nDiagnostic\x12\x0c\n\x04\x63ode\x18\x01 \x01(\t\x12\x0f\n\x07message\x18\x02 \x01(\t\"\x15\n\x13\x43\x61pabilitiesRequest\"\xfa\x02\n\x14\x43\x61pabilitiesResponse\x12\x18\n\x10protocol_version\x18\x01 \x01(\t\x12\x17\n\x0fparser_versions\x18\x02 \x03(\t\x12\x13\n\x0bir_versions\x18\x03 \x03(\t\x12 \n\x18prepared_query_supported\x18\x04 \x01(\x08\x12\x19\n\x11parameter_binding\x18\x05 \x01(\t\x12\x1b\n\x13index_ddl_supported\x18\x06 \x01(\x08\x12\x1d\n\x15max_write_batch_bytes\x18\x07 \x01(\x03\x12(\n configured_max_write_batch_bytes\x18\x08 \x01(\x03\x12\'\n\x1f\x65\x66\x66\x65\x63tive_max_write_batch_bytes\x18\t \x01(\x03\x12#\n\x1bmax_write_batch_bytes_tuned\x18\n \x01(\x08\x12)\n!strict_variant_dispatch_supported\x18\x0b \x01(\x08\"e\n\x1a\x43reatePropertyIndexRequest\x12\x0e\n\x06tenant\x18\x01 \x01(\t\x12\x0e\n\x06schema\x18\x02 \x01(\t\x12\x10\n\x08property\x18\x03 \x01(\t\x12\x15\n\rif_not_exists\x18\x04 \x01(\x08\"H\n\x1b\x43reatePropertyIndexResponse\x12\x0f\n\x07\x63reated\x18\x01 \x01(\x08\x12\x18\n\x10indexed_entities\x18\x02 \x01(\x03\"x\n\x03Row\x12-\n\x06values\x18\x01 \x03(\x0b\x32\x1d.vitaledge.v1.Row.ValuesEntry\x1a\x42\n\x0bValuesEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\"\n\x05value\x18\x02 \x01(\x0b\x32\x13.vitaledge.v1.Value:\x02\x38\x01\"\x8c\x02\n\x05Value\x12\x14\n\nbool_value\x18\x01 \x01(\x08H\x00\x12\x13\n\tint_value\x18\x02 \x01(\x03H\x00\x12\x16\n\x0c\x64ouble_value\x18\x03 \x01(\x01H\x00\x12\x16\n\x0cstring_value\x18\x04 \x01(\tH\x00\x12\x15\n\x0b\x62ytes_value\x18\x05 \x01(\x0cH\x00\x12-\n\nlist_value\x18\x06 \x01(\x0b\x32\x17.vitaledge.v1.ListValueH\x00\x12+\n\tmap_value\x18\x07 \x01(\x0b\x32\x16.vitaledge.v1.MapValueH\x00\x12-\n\nnull_value\x18\x08 \x01(\x0b\x32\x17.vitaledge.v1.NullValueH\x00\x42\x06\n\x04kind\"0\n\tListValue\x12#\n\x06values\x18\x01 \x03(\x0b\x32\x13.vitaledge.v1.Value\"\x82\x01\n\x08MapValue\x12\x32\n\x06values\x18\x01 \x03(\x0b\x32\".vitaledge.v1.MapValue.ValuesEntry\x1a\x42\n\x0bValuesEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\"\n\x05value\x18\x02 \x01(\x0b\x32\x13.vitaledge.v1.Value:\x02\x38\x01\"\x0b\n\tNullValue2\xde\x02\n\x0cQueryService\x12\x42\n\x07\x45xecute\x12\x1a.vitaledge.v1.QueryRequest\x1a\x1b.vitaledge.v1.QueryResponse\x12\x44\n\x07\x45xplain\x12\x1a.vitaledge.v1.QueryRequest\x1a\x1d.vitaledge.v1.ExplainResponse\x12X\n\x0fGetCapabilities\x12!.vitaledge.v1.CapabilitiesRequest\x1a\".vitaledge.v1.CapabilitiesResponse\x12j\n\x13\x43reatePropertyIndex\x12(.vitaledge.v1.CreatePropertyIndexRequest\x1a).vitaledge.v1.CreatePropertyIndexResponseB;Z9github.com/spaceqraft/vitaledge/api/proto/vitaledge/v1;v1b\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'vitaledge.v1.query_pb2', _globals)
 if not _descriptor._USE_C_DESCRIPTORS:
   _globals['DESCRIPTOR']._loaded_options = None
-  _globals['DESCRIPTOR']._serialized_options = b'Z5github.com/paegun/vitaledge/api/proto/vitaledge/v1;v1'
+  _globals['DESCRIPTOR']._serialized_options = b'Z9github.com/spaceqraft/vitaledge/api/proto/vitaledge/v1;v1'
   _globals['_QUERYREQUEST_PARAMETERSENTRY']._loaded_options = None
   _globals['_QUERYREQUEST_PARAMETERSENTRY']._serialized_options = b'8\001'
   _globals['_ROW_VALUESENTRY']._loaded_options = None
@@ -46,36 +46,40 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_QUERYINPUT']._serialized_end=431
   _globals['_PREPAREDQUERY']._serialized_start=433
   _globals['_PREPAREDQUERY']._serialized_end=555
-  _globals['_REQUESTOPTIONS']._serialized_start=557
-  _globals['_REQUESTOPTIONS']._serialized_end=675
-  _globals['_CLIENTCONTEXT']._serialized_start=677
-  _globals['_CLIENTCONTEXT']._serialized_end=761
-  _globals['_QUERYRESPONSE']._serialized_start=764
-  _globals['_QUERYRESPONSE']._serialized_end=914
-  _globals['_EXPLAINRESPONSE']._serialized_start=916
-  _globals['_EXPLAINRESPONSE']._serialized_end=1040
-  _globals['_QUERYSTATS']._serialized_start=1042
-  _globals['_QUERYSTATS']._serialized_end=1098
-  _globals['_DIAGNOSTIC']._serialized_start=1100
-  _globals['_DIAGNOSTIC']._serialized_end=1143
-  _globals['_CAPABILITIESREQUEST']._serialized_start=1145
-  _globals['_CAPABILITIESREQUEST']._serialized_end=1166
-  _globals['_CAPABILITIESRESPONSE']._serialized_start=1169
-  _globals['_CAPABILITIESRESPONSE']._serialized_end=1324
-  _globals['_ROW']._serialized_start=1326
-  _globals['_ROW']._serialized_end=1446
-  _globals['_ROW_VALUESENTRY']._serialized_start=1380
-  _globals['_ROW_VALUESENTRY']._serialized_end=1446
-  _globals['_VALUE']._serialized_start=1449
-  _globals['_VALUE']._serialized_end=1717
-  _globals['_LISTVALUE']._serialized_start=1719
-  _globals['_LISTVALUE']._serialized_end=1767
-  _globals['_MAPVALUE']._serialized_start=1770
-  _globals['_MAPVALUE']._serialized_end=1900
-  _globals['_MAPVALUE_VALUESENTRY']._serialized_start=1380
-  _globals['_MAPVALUE_VALUESENTRY']._serialized_end=1446
-  _globals['_NULLVALUE']._serialized_start=1902
-  _globals['_NULLVALUE']._serialized_end=1913
-  _globals['_QUERYSERVICE']._serialized_start=1916
-  _globals['_QUERYSERVICE']._serialized_end=2158
+  _globals['_REQUESTOPTIONS']._serialized_start=558
+  _globals['_REQUESTOPTIONS']._serialized_end=709
+  _globals['_CLIENTCONTEXT']._serialized_start=711
+  _globals['_CLIENTCONTEXT']._serialized_end=795
+  _globals['_QUERYRESPONSE']._serialized_start=798
+  _globals['_QUERYRESPONSE']._serialized_end=948
+  _globals['_EXPLAINRESPONSE']._serialized_start=950
+  _globals['_EXPLAINRESPONSE']._serialized_end=1074
+  _globals['_QUERYSTATS']._serialized_start=1077
+  _globals['_QUERYSTATS']._serialized_end=1253
+  _globals['_DIAGNOSTIC']._serialized_start=1255
+  _globals['_DIAGNOSTIC']._serialized_end=1298
+  _globals['_CAPABILITIESREQUEST']._serialized_start=1300
+  _globals['_CAPABILITIESREQUEST']._serialized_end=1321
+  _globals['_CAPABILITIESRESPONSE']._serialized_start=1324
+  _globals['_CAPABILITIESRESPONSE']._serialized_end=1702
+  _globals['_CREATEPROPERTYINDEXREQUEST']._serialized_start=1704
+  _globals['_CREATEPROPERTYINDEXREQUEST']._serialized_end=1805
+  _globals['_CREATEPROPERTYINDEXRESPONSE']._serialized_start=1807
+  _globals['_CREATEPROPERTYINDEXRESPONSE']._serialized_end=1879
+  _globals['_ROW']._serialized_start=1881
+  _globals['_ROW']._serialized_end=2001
+  _globals['_ROW_VALUESENTRY']._serialized_start=1935
+  _globals['_ROW_VALUESENTRY']._serialized_end=2001
+  _globals['_VALUE']._serialized_start=2004
+  _globals['_VALUE']._serialized_end=2272
+  _globals['_LISTVALUE']._serialized_start=2274
+  _globals['_LISTVALUE']._serialized_end=2322
+  _globals['_MAPVALUE']._serialized_start=2325
+  _globals['_MAPVALUE']._serialized_end=2455
+  _globals['_MAPVALUE_VALUESENTRY']._serialized_start=1935
+  _globals['_MAPVALUE_VALUESENTRY']._serialized_end=2001
+  _globals['_NULLVALUE']._serialized_start=2457
+  _globals['_NULLVALUE']._serialized_end=2468
+  _globals['_QUERYSERVICE']._serialized_start=2471
+  _globals['_QUERYSERVICE']._serialized_end=2821
 # @@protoc_insertion_point(module_scope)

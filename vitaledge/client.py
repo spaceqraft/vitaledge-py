@@ -32,7 +32,30 @@ class QueryResult:
     @property
     def stats(self) -> dict:
         s = self._response.stats
-        return {"rows_returned": s.rows_returned, "duration_ms": s.duration_ms}
+        return {
+            "rows_returned": s.rows_returned,
+            "duration_ms": s.duration_ms,
+            "configured_max_write_batch_bytes": _positive_int_or_none(
+                s,
+                "configured_max_write_batch_bytes",
+            ),
+            "effective_max_write_batch_bytes": _positive_int_or_none(
+                s,
+                "effective_max_write_batch_bytes",
+            ),
+            "max_write_batch_bytes_tuned": bool(
+                getattr(s, "max_write_batch_bytes_tuned", False)
+            ),
+        }
+
+    @property
+    def max_write_batch_bytes(self) -> int | None:
+        """Return the execute-time batch limit, preferring the effective tuned value."""
+        stats = self._response.stats
+        return (
+            _positive_int_or_none(stats, "effective_max_write_batch_bytes")
+            or _positive_int_or_none(stats, "configured_max_write_batch_bytes")
+        )
 
     @property
     def warnings(self) -> list[dict]:
@@ -55,7 +78,21 @@ class ExplainResult:
     @property
     def stats(self) -> dict:
         s = self._response.stats
-        return {"rows_returned": s.rows_returned, "duration_ms": s.duration_ms}
+        return {
+            "rows_returned": s.rows_returned,
+            "duration_ms": s.duration_ms,
+            "configured_max_write_batch_bytes": _positive_int_or_none(
+                s,
+                "configured_max_write_batch_bytes",
+            ),
+            "effective_max_write_batch_bytes": _positive_int_or_none(
+                s,
+                "effective_max_write_batch_bytes",
+            ),
+            "max_write_batch_bytes_tuned": bool(
+                getattr(s, "max_write_batch_bytes_tuned", False)
+            ),
+        }
 
     @property
     def warnings(self) -> list[dict]:
@@ -87,6 +124,51 @@ class Capabilities:
     @property
     def parameter_binding(self) -> str:
         return self._response.parameter_binding
+
+    @property
+    def index_ddl_supported(self) -> bool:
+        return self._response.index_ddl_supported
+
+    @property
+    def max_write_batch_bytes(self) -> int | None:
+        """Return the server-advertised maximum write batch size in bytes, if known."""
+        return (
+            self.effective_max_write_batch_bytes
+            or self.configured_max_write_batch_bytes
+            or _positive_int_or_none(
+                self._response,
+                "max_write_batch_bytes",
+                "MaxWriteBatchBytes",
+                "max_write_batch_size",
+                "max_batch_bytes",
+            )
+        )
+
+    @property
+    def configured_max_write_batch_bytes(self) -> int | None:
+        return _positive_int_or_none(
+            self._response,
+            "configured_max_write_batch_bytes",
+        )
+
+    @property
+    def effective_max_write_batch_bytes(self) -> int | None:
+        return _positive_int_or_none(
+            self._response,
+            "effective_max_write_batch_bytes",
+        )
+
+    @property
+    def max_write_batch_bytes_tuned(self) -> bool:
+        return bool(getattr(self._response, "max_write_batch_bytes_tuned", False))
+
+
+def _positive_int_or_none(obj: object, *field_names: str) -> int | None:
+    for field_name in field_names:
+        value = getattr(obj, field_name, None)
+        if isinstance(value, int) and value > 0:
+            return value
+    return None
 
 
 class VitalEdgeClient:
@@ -187,11 +269,17 @@ class VitalEdgeClient:
         self,
         cypher: str,
         *,
+        parameters: Mapping[str, object] | None = None,
         tenant: str | None = None,
         timeout: float | None = None,
     ) -> ExplainResult:
         """Request a query execution plan without running the query."""
-        request = self._build_request(cypher, tenant=tenant)
+        proto_params = (
+            {name: _python_to_proto_value(v) for name, v in parameters.items()}
+            if parameters
+            else {}
+        )
+        request = self._build_request(cypher, parameters=proto_params, tenant=tenant)
         response = self._stub.Explain(request, timeout=timeout)
         return ExplainResult(response)
 
@@ -201,6 +289,28 @@ class VitalEdgeClient:
             query_pb2.CapabilitiesRequest(), timeout=timeout
         )
         return Capabilities(response)
+
+    def create_property_index(
+        self,
+        *,
+        schema: str,
+        property: str,
+        tenant: str | None = None,
+        if_not_exists: bool = True,
+        timeout: float | None = None,
+    ) -> dict:
+        """Create a property index for faster equality lookups and MERGE matching."""
+        request = query_pb2.CreatePropertyIndexRequest(
+            tenant=tenant if tenant is not None else self._tenant,
+            schema=schema,
+            property=property,
+            if_not_exists=if_not_exists,
+        )
+        response = self._stub.CreatePropertyIndex(request, timeout=timeout)
+        return {
+            "created": response.created,
+            "indexed_entities": response.indexed_entities,
+        }
 
     # ------------------------------------------------------------------
     # Helpers
