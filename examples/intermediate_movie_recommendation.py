@@ -99,7 +99,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--batch-size",
         type=int,
-        default=500,
+        default=1000,
         help="Node/relationship ingest batch size",
     )
     parser.add_argument(
@@ -111,7 +111,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--ratings-limit",
         type=int,
-        default=0,
+        default=10000,
         help="Cap on ratings rows loaded (0 = all); useful for large datasets",
     )
     parser.add_argument(
@@ -1006,6 +1006,9 @@ def print_user_recommendations(
 # ── Main ──────────────────────────────────────────────────────────────────────
 
 def main() -> None:
+    main_full()
+
+def main_full() -> None:
     args = parse_args()
 
     print(f"Loading movies from {args.movies} ...")
@@ -1059,6 +1062,9 @@ def main() -> None:
         print(f"Generating recommendations for top {args.user_sample} users ...")
         recommend_for_users(client, args.user_sample, args.limit)
 
+        main_results(client, args)
+
+def main_results(client, args):
         print("\nResults:")
         print_top_overall(client, args.limit)
         print_top_per_genre(client, args.limit)
