@@ -5,7 +5,7 @@ from __future__ import annotations
 from collections.abc import Mapping
 import grpc
 
-from vitaledge._proto.v1 import query_pb2, query_pb2_grpc
+from vitaledge._proto.v1 import dml_pb2, dml_pb2_grpc, ddl_pb2, ddl_pb2_grpc
 
 _SDK_LANGUAGE = "python"
 _SDK_VERSION = "0.1.0"
@@ -18,7 +18,7 @@ DEFAULT_PORT = 7443
 class QueryResult:
     """Wraps a QueryResponse for convenient access."""
 
-    def __init__(self, response: query_pb2.QueryResponse) -> None:
+    def __init__(self, response: dml_pb2.QueryResponse) -> None:
         self._response = response
 
     @property
@@ -68,7 +68,7 @@ class QueryResult:
 class ExplainResult:
     """Wraps an ExplainResponse."""
 
-    def __init__(self, response: query_pb2.ExplainResponse) -> None:
+    def __init__(self, response: dml_pb2.ExplainResponse) -> None:
         self._response = response
 
     @property
@@ -102,7 +102,7 @@ class ExplainResult:
 class Capabilities:
     """Wraps a CapabilitiesResponse."""
 
-    def __init__(self, response: query_pb2.CapabilitiesResponse) -> None:
+    def __init__(self, response: dml_pb2.CapabilitiesResponse) -> None:
         self._response = response
 
     @property
@@ -172,7 +172,7 @@ def _positive_int_or_none(obj: object, *field_names: str) -> int | None:
 
 
 class VitalEdgeClient:
-    """Synchronous gRPC client for VitalEdge QueryService.
+    """Synchronous gRPC client for VitalEdge DmlService and DdlService.
 
     Usage::
 
@@ -196,7 +196,8 @@ class VitalEdgeClient:
         self._port = port
         self._tenant = tenant
         self._channel: grpc.Channel | None = None
-        self._stub: query_pb2_grpc.QueryServiceStub | None = None
+        self._dml_stub: dml_pb2_grpc.DmlServiceStub | None = None
+        self._ddl_stub: ddl_pb2_grpc.DmlServiceStub | None = None
         self._tls = tls
         self._tls_credentials = tls_credentials
         self._channel_options = channel_options or []
@@ -224,14 +225,16 @@ class VitalEdgeClient:
             self._channel = grpc.secure_channel(target, creds, options=self._channel_options)
         else:
             self._channel = grpc.insecure_channel(target, options=self._channel_options)
-        self._stub = query_pb2_grpc.QueryServiceStub(self._channel)
+        self._dml_stub = dml_pb2_grpc.DmlServiceStub(self._channel)
+        self._ddl_stub = ddl_pb2_grpc.DdlServiceStub(self._channel)
 
     def close(self) -> None:
         """Close the gRPC channel."""
         if self._channel is not None:
             self._channel.close()
             self._channel = None
-            self._stub = None
+            self._dml_stub = None
+            self._ddl_stub = None
 
     # ------------------------------------------------------------------
     # Public API
@@ -262,7 +265,7 @@ class VitalEdgeClient:
             include_stats=include_stats,
             include_warnings=include_warnings,
         )
-        response = self._stub.Execute(request, timeout=timeout)
+        response = self._dml_stub.Execute(request, timeout=timeout)
         return QueryResult(response)
 
     def explain(
@@ -280,17 +283,17 @@ class VitalEdgeClient:
             else {}
         )
         request = self._build_request(cypher, parameters=proto_params, tenant=tenant)
-        response = self._stub.Explain(request, timeout=timeout)
+        response = self._dml_stub.Explain(request, timeout=timeout)
         return ExplainResult(response)
 
     def get_capabilities(self, *, timeout: float | None = None) -> Capabilities:
         """Retrieve server capabilities."""
-        response = self._stub.GetCapabilities(
-            query_pb2.CapabilitiesRequest(), timeout=timeout
+        response = self._dml_stub.GetCapabilities(
+            dml_pb2.CapabilitiesRequest(), timeout=timeout
         )
         return Capabilities(response)
 
-    def create_property_index(
+    def create_vertex_property_index(
         self,
         *,
         schema: str,
@@ -299,18 +302,42 @@ class VitalEdgeClient:
         if_not_exists: bool = True,
         timeout: float | None = None,
     ) -> dict:
-        """Create a property index for faster equality lookups and MERGE matching."""
-        request = query_pb2.CreatePropertyIndexRequest(
+        """Create a vertex property index for faster equality lookups and MERGE matching."""
+        request = ddl_pb2.CreateVertexPropertyIndexRequest(
             tenant=tenant if tenant is not None else self._tenant,
             schema=schema,
             property=property,
             if_not_exists=if_not_exists,
         )
-        response = self._stub.CreatePropertyIndex(request, timeout=timeout)
+        response = self._ddl_stub.CreateVertexPropertyIndex(request, timeout=timeout)
         return {
             "created": response.created,
             "indexed_entities": response.indexed_entities,
         }
+
+
+    def create_edge_property_index(
+        self,
+        *,
+        schema: str,
+        property: str,
+        tenant: str | None = None,
+        if_not_exists: bool = True,
+        timeout: float | None = None,
+    ) -> dict:
+        """Create an edge property index for faster equality lookups and MERGE matching."""
+        request = ddl_pb2.CreateEdgePropertyIndexRequest(
+            tenant=tenant if tenant is not None else self._tenant,
+            schema=schema,
+            property=property,
+            if_not_exists=if_not_exists,
+        )
+        response = self._ddl_stub.CreateEdgePropertyIndex(request, timeout=timeout)
+        return {
+            "created": response.created,
+            "indexed_entities": response.indexed_entities,
+        }
+
 
     # ------------------------------------------------------------------
     # Helpers
@@ -325,16 +352,16 @@ class VitalEdgeClient:
         read_only: bool = False,
         include_stats: bool = False,
         include_warnings: bool = False,
-    ) -> query_pb2.QueryRequest:
-        return query_pb2.QueryRequest(
+    ) -> dml_pb2.QueryRequest:
+        return dml_pb2.QueryRequest(
             tenant=tenant if tenant is not None else self._tenant,
-            input=query_pb2.QueryInput(cypher=cypher),
-            options=query_pb2.RequestOptions(
+            input=dml_pb2.QueryInput(cypher=cypher),
+            options=dml_pb2.RequestOptions(
                 read_only=read_only,
                 include_stats=include_stats,
                 include_warnings=include_warnings,
             ),
-            client=query_pb2.ClientContext(
+            client=dml_pb2.ClientContext(
                 sdk_language=_SDK_LANGUAGE,
                 sdk_version=_SDK_VERSION,
                 protocol_version=_PROTOCOL_VERSION,
@@ -351,36 +378,36 @@ class VitalEdgeClient:
 # Internal helpers
 # ---------------------------------------------------------------------------
 
-def _python_to_proto_value(v: object) -> query_pb2.Value:
+def _python_to_proto_value(v: object) -> dml_pb2.Value:
     """Convert a Python value to the proto Value type for parameter binding."""
     if v is None:
-        return query_pb2.Value(null_value=query_pb2.NullValue())
+        return dml_pb2.Value(null_value=dml_pb2.NullValue())
     if isinstance(v, bool):
-        return query_pb2.Value(bool_value=v)
+        return dml_pb2.Value(bool_value=v)
     if isinstance(v, int):
-        return query_pb2.Value(int_value=v)
+        return dml_pb2.Value(int_value=v)
     if isinstance(v, float):
-        return query_pb2.Value(double_value=v)
+        return dml_pb2.Value(double_value=v)
     if isinstance(v, str):
-        return query_pb2.Value(string_value=v)
+        return dml_pb2.Value(string_value=v)
     if isinstance(v, bytes):
-        return query_pb2.Value(bytes_value=v)
+        return dml_pb2.Value(bytes_value=v)
     if isinstance(v, (list, tuple)):
-        return query_pb2.Value(
-            list_value=query_pb2.ListValue(
+        return dml_pb2.Value(
+            list_value=dml_pb2.ListValue(
                 values=[_python_to_proto_value(item) for item in v]
             )
         )
     if isinstance(v, Mapping):
-        return query_pb2.Value(
-            map_value=query_pb2.MapValue(
+        return dml_pb2.Value(
+            map_value=dml_pb2.MapValue(
                 values={k: _python_to_proto_value(mv) for k, mv in v.items()}
             )
         )
     raise TypeError(f"Unsupported parameter type: {type(v).__name__}")
 
 
-def _value_to_python(v: query_pb2.Value):
+def _value_to_python(v: dml_pb2.Value):
     kind = v.WhichOneof("kind")
     if kind == "bool_value":
         return v.bool_value
@@ -399,7 +426,7 @@ def _value_to_python(v: query_pb2.Value):
     return None  # null_value or unknown
 
 
-def _row_to_dict(row: query_pb2.Row) -> dict:
+def _row_to_dict(row: dml_pb2.Row) -> dict:
     return {k: _value_to_python(v) for k, v in row.values.items()}
 
 

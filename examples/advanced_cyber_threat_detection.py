@@ -18,6 +18,7 @@ from __future__ import annotations
 import argparse
 import csv
 from dataclasses import dataclass
+import grpc
 from pathlib import Path
 from typing import Iterable
 
@@ -178,6 +179,30 @@ def reset_graph(client: VitalEdgeClient) -> None:
     DETACH DELETE f
     """
     client.execute(reset_query)
+
+    specs = [
+        ("Host", "ip"),
+        ("Flow", "protocol"),
+        ("Flow", "detected_malicious"),
+        ("Flow", "suspicious_flows"),
+        ("Flow", "distinct_targets"),
+        ("Flow", "distinct_ports"),
+    ]
+    for schema, property_name in specs:
+        try:
+            result = client.create_vertex_property_index(
+                schema=schema,
+                property=property_name,
+                if_not_exists=True,
+            )
+            state = "created" if result["created"] else "already exists"
+            print(
+                "  Index "
+                f"{schema}.{property_name}: {state} "
+                f"(indexed_entities={result['indexed_entities']})"
+            )
+        except grpc.RpcError as exc:
+            print(f"  Index {schema}.{property_name}: failed ({exc.code().name}: {exc.details()})")
 
 
 def ingest_flows(client: VitalEdgeClient, records: list[FlowRecord], batch_size: int) -> None:

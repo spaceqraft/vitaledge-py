@@ -404,18 +404,29 @@ def ensure_ingest_indexes(client: VitalEdgeClient) -> dict:
         return summary
 
     specs = [
-        ("Movie", "movie_id"),
-        ("User", "user_id"),
-        ("Genre", "genre"),
+        ("Vertex", "Movie", "movie_id"),
+        ("Vertex", "User", "user_id"),
+        ("Vertex", "Genre", "genre"),
+        ("Vertex", "Movie", "year"),
+        ("Vertex", "Movie", "num_ratings"),
+        ("Edge", "RATED", "rating"),
     ]
-    for schema, property_name in specs:
+    for index_type, schema, property_name in specs:
         summary["attempted"] += 1
         try:
-            result = client.create_property_index(
-                schema=schema,
-                property=property_name,
-                if_not_exists=True,
-            )
+            if index_type == "Vertex":
+              result = client.create_vertex_property_index(
+                    schema=schema,
+                    property=property_name,
+                    if_not_exists=True,
+                )
+            else:
+              result = client.create_edge_property_index(
+                    schema=schema,
+                    property=property_name,
+                    if_not_exists=True,
+                )
+
             state = "created" if result["created"] else "already exists"
             if result["created"]:
                 summary["created"] += 1
