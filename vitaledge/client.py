@@ -5,7 +5,7 @@ from __future__ import annotations
 from collections.abc import Mapping
 import grpc
 
-from vitaledge._proto.v1 import dml_pb2, dml_pb2_grpc, ddl_pb2, ddl_pb2_grpc
+from vitaledge._proto.v1 import ddl_pb2, ddl_pb2_grpc, dml_pb2, dml_pb2_grpc
 
 _SDK_LANGUAGE = "python"
 _SDK_VERSION = "0.1.0"
@@ -172,7 +172,7 @@ def _positive_int_or_none(obj: object, *field_names: str) -> int | None:
 
 
 class VitalEdgeClient:
-    """Synchronous gRPC client for VitalEdge DmlService and DdlService.
+    """Synchronous gRPC client for VitalEdge DML and DDL services.
 
     Usage::
 
@@ -197,7 +197,7 @@ class VitalEdgeClient:
         self._tenant = tenant
         self._channel: grpc.Channel | None = None
         self._dml_stub: dml_pb2_grpc.DmlServiceStub | None = None
-        self._ddl_stub: ddl_pb2_grpc.DmlServiceStub | None = None
+        self._ddl_stub: ddl_pb2_grpc.DdlServiceStub | None = None
         self._tls = tls
         self._tls_credentials = tls_credentials
         self._channel_options = channel_options or []
@@ -302,7 +302,7 @@ class VitalEdgeClient:
         if_not_exists: bool = True,
         timeout: float | None = None,
     ) -> dict:
-        """Create a vertex property index for faster equality lookups and MERGE matching."""
+        """Create a property index for faster equality lookups and MERGE matching."""
         request = ddl_pb2.CreateVertexPropertyIndexRequest(
             tenant=tenant if tenant is not None else self._tenant,
             schema=schema,
@@ -315,7 +315,6 @@ class VitalEdgeClient:
             "indexed_entities": response.indexed_entities,
         }
 
-
     def create_edge_property_index(
         self,
         *,
@@ -325,7 +324,7 @@ class VitalEdgeClient:
         if_not_exists: bool = True,
         timeout: float | None = None,
     ) -> dict:
-        """Create an edge property index for faster equality lookups and MERGE matching."""
+        """Create a property index for faster equality lookups and MERGE matching."""
         request = ddl_pb2.CreateEdgePropertyIndexRequest(
             tenant=tenant if tenant is not None else self._tenant,
             schema=schema,
@@ -338,6 +337,71 @@ class VitalEdgeClient:
             "indexed_entities": response.indexed_entities,
         }
 
+    def create_vertex_property_index(
+        self,
+        *,
+        schema: str,
+        property: str,
+        tenant: str | None = None,
+        if_not_exists: bool = True,
+        timeout: float | None = None,
+    ) -> dict:
+        """Create a property index for faster equality lookups and MERGE matching."""
+        request = ddl_pb2.CreateVertexPropertyIndexRequest(
+            tenant=tenant if tenant is not None else self._tenant,
+            schema=schema,
+            property=property,
+            if_not_exists=if_not_exists,
+        )
+        response = self._ddl_stub.CreateVertexPropertyIndex(request, timeout=timeout)
+        return {
+            "created": response.created,
+            "indexed_entities": response.indexed_entities,
+        }
+
+    def create_vertex_identity_config(
+        self,
+        *,
+        schema: str,
+        properties: list[str],
+        tenant: str | None = None,
+        if_not_exists: bool = True,
+        timeout: float | None = None,
+    ) -> dict:
+        """Create a vertex identity configuration."""
+        request = ddl_pb2.CreateVertexIdentityConfigRequest(
+            tenant=tenant if tenant is not None else self._tenant,
+            schema=schema,
+            identity_properties=properties,
+            if_not_exists=if_not_exists,
+        )
+        response = self._ddl_stub.CreateVertexIdentityConfig(request, timeout=timeout)
+        return {
+            "created": response.created,
+        }
+
+    def create_edge_identity_config(
+        self,
+        *,
+        schema: str,
+        properties: list[str],
+        tenant: str | None = None,
+        if_not_exists: bool = True,
+        timeout: float | None = None,
+    ) -> dict:
+        """Create an edge identity configuration."""
+        request = ddl_pb2.CreateEdgeIdentityConfigRequest(
+            tenant=tenant if tenant is not None else self._tenant,
+            schema=schema,
+            identity_properties=properties,
+            if_not_exists=if_not_exists,
+        )
+        response = self._ddl_stub.CreateEdgeIdentityConfig(request, timeout=timeout)
+        return {
+            "created": response.created,
+        }
+
+>>>>>>> 7338c5d197af79529a666f2ef5574a7de12cb372
 
     # ------------------------------------------------------------------
     # Helpers

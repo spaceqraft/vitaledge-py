@@ -44,6 +44,31 @@ class DdlServiceStub(object):
                 request_serializer=vitaledge_dot_v1_dot_ddl__pb2.CreateEdgePropertyIndexRequest.SerializeToString,
                 response_deserializer=vitaledge_dot_v1_dot_ddl__pb2.CreateEdgePropertyIndexResponse.FromString,
                 _registered_method=True)
+        self.CreateVertexIdentityConfig = channel.unary_unary(
+                '/vitaledge.v1.DdlService/CreateVertexIdentityConfig',
+                request_serializer=vitaledge_dot_v1_dot_ddl__pb2.CreateVertexIdentityConfigRequest.SerializeToString,
+                response_deserializer=vitaledge_dot_v1_dot_ddl__pb2.CreateVertexIdentityConfigResponse.FromString,
+                _registered_method=True)
+        self.CreateEdgeIdentityConfig = channel.unary_unary(
+                '/vitaledge.v1.DdlService/CreateEdgeIdentityConfig',
+                request_serializer=vitaledge_dot_v1_dot_ddl__pb2.CreateEdgeIdentityConfigRequest.SerializeToString,
+                response_deserializer=vitaledge_dot_v1_dot_ddl__pb2.CreateEdgeIdentityConfigResponse.FromString,
+                _registered_method=True)
+        self.ListIdentityConfigs = channel.unary_unary(
+                '/vitaledge.v1.DdlService/ListIdentityConfigs',
+                request_serializer=vitaledge_dot_v1_dot_ddl__pb2.ListIdentityConfigsRequest.SerializeToString,
+                response_deserializer=vitaledge_dot_v1_dot_ddl__pb2.ListIdentityConfigsResponse.FromString,
+                _registered_method=True)
+        self.DeleteVertexIdentityConfig = channel.unary_unary(
+                '/vitaledge.v1.DdlService/DeleteVertexIdentityConfig',
+                request_serializer=vitaledge_dot_v1_dot_ddl__pb2.DeleteVertexIdentityConfigRequest.SerializeToString,
+                response_deserializer=vitaledge_dot_v1_dot_ddl__pb2.DeleteVertexIdentityConfigResponse.FromString,
+                _registered_method=True)
+        self.DeleteEdgeIdentityConfig = channel.unary_unary(
+                '/vitaledge.v1.DdlService/DeleteEdgeIdentityConfig',
+                request_serializer=vitaledge_dot_v1_dot_ddl__pb2.DeleteEdgeIdentityConfigRequest.SerializeToString,
+                response_deserializer=vitaledge_dot_v1_dot_ddl__pb2.DeleteEdgeIdentityConfigResponse.FromString,
+                _registered_method=True)
 
 
 class DdlServiceServicer(object):
@@ -61,6 +86,36 @@ class DdlServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def CreateVertexIdentityConfig(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def CreateEdgeIdentityConfig(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def ListIdentityConfigs(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def DeleteVertexIdentityConfig(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def DeleteEdgeIdentityConfig(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_DdlServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -73,6 +128,31 @@ def add_DdlServiceServicer_to_server(servicer, server):
                     servicer.CreateEdgePropertyIndex,
                     request_deserializer=vitaledge_dot_v1_dot_ddl__pb2.CreateEdgePropertyIndexRequest.FromString,
                     response_serializer=vitaledge_dot_v1_dot_ddl__pb2.CreateEdgePropertyIndexResponse.SerializeToString,
+            ),
+            'CreateVertexIdentityConfig': grpc.unary_unary_rpc_method_handler(
+                    servicer.CreateVertexIdentityConfig,
+                    request_deserializer=vitaledge_dot_v1_dot_ddl__pb2.CreateVertexIdentityConfigRequest.FromString,
+                    response_serializer=vitaledge_dot_v1_dot_ddl__pb2.CreateVertexIdentityConfigResponse.SerializeToString,
+            ),
+            'CreateEdgeIdentityConfig': grpc.unary_unary_rpc_method_handler(
+                    servicer.CreateEdgeIdentityConfig,
+                    request_deserializer=vitaledge_dot_v1_dot_ddl__pb2.CreateEdgeIdentityConfigRequest.FromString,
+                    response_serializer=vitaledge_dot_v1_dot_ddl__pb2.CreateEdgeIdentityConfigResponse.SerializeToString,
+            ),
+            'ListIdentityConfigs': grpc.unary_unary_rpc_method_handler(
+                    servicer.ListIdentityConfigs,
+                    request_deserializer=vitaledge_dot_v1_dot_ddl__pb2.ListIdentityConfigsRequest.FromString,
+                    response_serializer=vitaledge_dot_v1_dot_ddl__pb2.ListIdentityConfigsResponse.SerializeToString,
+            ),
+            'DeleteVertexIdentityConfig': grpc.unary_unary_rpc_method_handler(
+                    servicer.DeleteVertexIdentityConfig,
+                    request_deserializer=vitaledge_dot_v1_dot_ddl__pb2.DeleteVertexIdentityConfigRequest.FromString,
+                    response_serializer=vitaledge_dot_v1_dot_ddl__pb2.DeleteVertexIdentityConfigResponse.SerializeToString,
+            ),
+            'DeleteEdgeIdentityConfig': grpc.unary_unary_rpc_method_handler(
+                    servicer.DeleteEdgeIdentityConfig,
+                    request_deserializer=vitaledge_dot_v1_dot_ddl__pb2.DeleteEdgeIdentityConfigRequest.FromString,
+                    response_serializer=vitaledge_dot_v1_dot_ddl__pb2.DeleteEdgeIdentityConfigResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -129,6 +209,141 @@ class DdlService(object):
             '/vitaledge.v1.DdlService/CreateEdgePropertyIndex',
             vitaledge_dot_v1_dot_ddl__pb2.CreateEdgePropertyIndexRequest.SerializeToString,
             vitaledge_dot_v1_dot_ddl__pb2.CreateEdgePropertyIndexResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def CreateVertexIdentityConfig(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/vitaledge.v1.DdlService/CreateVertexIdentityConfig',
+            vitaledge_dot_v1_dot_ddl__pb2.CreateVertexIdentityConfigRequest.SerializeToString,
+            vitaledge_dot_v1_dot_ddl__pb2.CreateVertexIdentityConfigResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def CreateEdgeIdentityConfig(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/vitaledge.v1.DdlService/CreateEdgeIdentityConfig',
+            vitaledge_dot_v1_dot_ddl__pb2.CreateEdgeIdentityConfigRequest.SerializeToString,
+            vitaledge_dot_v1_dot_ddl__pb2.CreateEdgeIdentityConfigResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def ListIdentityConfigs(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/vitaledge.v1.DdlService/ListIdentityConfigs',
+            vitaledge_dot_v1_dot_ddl__pb2.ListIdentityConfigsRequest.SerializeToString,
+            vitaledge_dot_v1_dot_ddl__pb2.ListIdentityConfigsResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def DeleteVertexIdentityConfig(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/vitaledge.v1.DdlService/DeleteVertexIdentityConfig',
+            vitaledge_dot_v1_dot_ddl__pb2.DeleteVertexIdentityConfigRequest.SerializeToString,
+            vitaledge_dot_v1_dot_ddl__pb2.DeleteVertexIdentityConfigResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def DeleteEdgeIdentityConfig(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/vitaledge.v1.DdlService/DeleteEdgeIdentityConfig',
+            vitaledge_dot_v1_dot_ddl__pb2.DeleteEdgeIdentityConfigRequest.SerializeToString,
+            vitaledge_dot_v1_dot_ddl__pb2.DeleteEdgeIdentityConfigResponse.FromString,
             options,
             channel_credentials,
             insecure,

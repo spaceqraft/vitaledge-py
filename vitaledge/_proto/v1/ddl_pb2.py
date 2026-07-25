@@ -24,7 +24,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x16vitaledge/v1/ddl.proto\x12\x0cvitaledge.v1\"k\n CreateVertexPropertyIndexRequest\x12\x0e\n\x06tenant\x18\x01 \x01(\t\x12\x0e\n\x06schema\x18\x02 \x01(\t\x12\x10\n\x08property\x18\x03 \x01(\t\x12\x15\n\rif_not_exists\x18\x04 \x01(\x08\"N\n!CreateVertexPropertyIndexResponse\x12\x0f\n\x07\x63reated\x18\x01 \x01(\x08\x12\x18\n\x10indexed_entities\x18\x02 \x01(\x03\"i\n\x1e\x43reateEdgePropertyIndexRequest\x12\x0e\n\x06tenant\x18\x01 \x01(\t\x12\x0e\n\x06schema\x18\x02 \x01(\t\x12\x10\n\x08property\x18\x03 \x01(\t\x12\x15\n\rif_not_exists\x18\x04 \x01(\x08\"L\n\x1f\x43reateEdgePropertyIndexResponse\x12\x0f\n\x07\x63reated\x18\x01 \x01(\x08\x12\x18\n\x10indexed_entities\x18\x02 \x01(\x03\x32\x82\x02\n\nDdlService\x12|\n\x19\x43reateVertexPropertyIndex\x12..vitaledge.v1.CreateVertexPropertyIndexRequest\x1a/.vitaledge.v1.CreateVertexPropertyIndexResponse\x12v\n\x17\x43reateEdgePropertyIndex\x12,.vitaledge.v1.CreateEdgePropertyIndexRequest\x1a-.vitaledge.v1.CreateEdgePropertyIndexResponseB;Z9github.com/spaceqraft/vitaledge/api/proto/vitaledge/v1;v1b\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x16vitaledge/v1/ddl.proto\x12\x0cvitaledge.v1\"k\n CreateVertexPropertyIndexRequest\x12\x0e\n\x06tenant\x18\x01 \x01(\t\x12\x0e\n\x06schema\x18\x02 \x01(\t\x12\x10\n\x08property\x18\x03 \x01(\t\x12\x15\n\rif_not_exists\x18\x04 \x01(\x08\"N\n!CreateVertexPropertyIndexResponse\x12\x0f\n\x07\x63reated\x18\x01 \x01(\x08\x12\x18\n\x10indexed_entities\x18\x02 \x01(\x03\"i\n\x1e\x43reateEdgePropertyIndexRequest\x12\x0e\n\x06tenant\x18\x01 \x01(\t\x12\x0e\n\x06schema\x18\x02 \x01(\t\x12\x10\n\x08property\x18\x03 \x01(\t\x12\x15\n\rif_not_exists\x18\x04 \x01(\x08\"L\n\x1f\x43reateEdgePropertyIndexResponse\x12\x0f\n\x07\x63reated\x18\x01 \x01(\x08\x12\x18\n\x10indexed_entities\x18\x02 \x01(\x03\"w\n!CreateVertexIdentityConfigRequest\x12\x0e\n\x06tenant\x18\x01 \x01(\t\x12\x0e\n\x06schema\x18\x02 \x01(\t\x12\x1b\n\x13identity_properties\x18\x03 \x03(\t\x12\x15\n\rif_not_exists\x18\x04 \x01(\x08\"5\n\"CreateVertexIdentityConfigResponse\x12\x0f\n\x07\x63reated\x18\x01 \x01(\x08\"x\n\x1f\x43reateEdgeIdentityConfigRequest\x12\x0e\n\x06tenant\x18\x01 \x01(\t\x12\x11\n\tedge_type\x18\x02 \x01(\t\x12\x1b\n\x13identity_properties\x18\x03 \x03(\t\x12\x15\n\rif_not_exists\x18\x04 \x01(\x08\"3\n CreateEdgeIdentityConfigResponse\x12\x0f\n\x07\x63reated\x18\x01 \x01(\x08\"S\n\x14VertexIdentityConfig\x12\x0e\n\x06tenant\x18\x01 \x01(\t\x12\x0e\n\x06schema\x18\x02 \x01(\t\x12\x1b\n\x13identity_properties\x18\x03 \x03(\t\"T\n\x12\x45\x64geIdentityConfig\x12\x0e\n\x06tenant\x18\x01 \x01(\t\x12\x11\n\tedge_type\x18\x02 \x01(\t\x12\x1b\n\x13identity_properties\x18\x03 \x03(\t\",\n\x1aListIdentityConfigsRequest\x12\x0e\n\x06tenant\x18\x01 \x01(\t\"\x91\x01\n\x1bListIdentityConfigsResponse\x12:\n\x0evertex_configs\x18\x01 \x03(\x0b\x32\".vitaledge.v1.VertexIdentityConfig\x12\x36\n\x0c\x65\x64ge_configs\x18\x02 \x03(\x0b\x32 .vitaledge.v1.EdgeIdentityConfig\"V\n!DeleteVertexIdentityConfigRequest\x12\x0e\n\x06tenant\x18\x01 \x01(\t\x12\x0e\n\x06schema\x18\x02 \x01(\t\x12\x11\n\tif_exists\x18\x03 \x01(\x08\"5\n\"DeleteVertexIdentityConfigResponse\x12\x0f\n\x07\x64\x65leted\x18\x01 \x01(\x08\"W\n\x1f\x44\x65leteEdgeIdentityConfigRequest\x12\x0e\n\x06tenant\x18\x01 \x01(\t\x12\x11\n\tedge_type\x18\x02 \x01(\t\x12\x11\n\tif_exists\x18\x03 \x01(\x08\"3\n DeleteEdgeIdentityConfigResponse\x12\x0f\n\x07\x64\x65leted\x18\x01 \x01(\x08\x32\xe6\x06\n\nDdlService\x12|\n\x19\x43reateVertexPropertyIndex\x12..vitaledge.v1.CreateVertexPropertyIndexRequest\x1a/.vitaledge.v1.CreateVertexPropertyIndexResponse\x12v\n\x17\x43reateEdgePropertyIndex\x12,.vitaledge.v1.CreateEdgePropertyIndexRequest\x1a-.vitaledge.v1.CreateEdgePropertyIndexResponse\x12\x7f\n\x1a\x43reateVertexIdentityConfig\x12/.vitaledge.v1.CreateVertexIdentityConfigRequest\x1a\x30.vitaledge.v1.CreateVertexIdentityConfigResponse\x12y\n\x18\x43reateEdgeIdentityConfig\x12-.vitaledge.v1.CreateEdgeIdentityConfigRequest\x1a..vitaledge.v1.CreateEdgeIdentityConfigResponse\x12j\n\x13ListIdentityConfigs\x12(.vitaledge.v1.ListIdentityConfigsRequest\x1a).vitaledge.v1.ListIdentityConfigsResponse\x12\x7f\n\x1a\x44\x65leteVertexIdentityConfig\x12/.vitaledge.v1.DeleteVertexIdentityConfigRequest\x1a\x30.vitaledge.v1.DeleteVertexIdentityConfigResponse\x12y\n\x18\x44\x65leteEdgeIdentityConfig\x12-.vitaledge.v1.DeleteEdgeIdentityConfigRequest\x1a..vitaledge.v1.DeleteEdgeIdentityConfigResponseB;Z9github.com/spaceqraft/vitaledge/api/proto/vitaledge/v1;v1b\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -40,6 +40,30 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_CREATEEDGEPROPERTYINDEXREQUEST']._serialized_end=334
   _globals['_CREATEEDGEPROPERTYINDEXRESPONSE']._serialized_start=336
   _globals['_CREATEEDGEPROPERTYINDEXRESPONSE']._serialized_end=412
-  _globals['_DDLSERVICE']._serialized_start=415
-  _globals['_DDLSERVICE']._serialized_end=673
+  _globals['_CREATEVERTEXIDENTITYCONFIGREQUEST']._serialized_start=414
+  _globals['_CREATEVERTEXIDENTITYCONFIGREQUEST']._serialized_end=533
+  _globals['_CREATEVERTEXIDENTITYCONFIGRESPONSE']._serialized_start=535
+  _globals['_CREATEVERTEXIDENTITYCONFIGRESPONSE']._serialized_end=588
+  _globals['_CREATEEDGEIDENTITYCONFIGREQUEST']._serialized_start=590
+  _globals['_CREATEEDGEIDENTITYCONFIGREQUEST']._serialized_end=710
+  _globals['_CREATEEDGEIDENTITYCONFIGRESPONSE']._serialized_start=712
+  _globals['_CREATEEDGEIDENTITYCONFIGRESPONSE']._serialized_end=763
+  _globals['_VERTEXIDENTITYCONFIG']._serialized_start=765
+  _globals['_VERTEXIDENTITYCONFIG']._serialized_end=848
+  _globals['_EDGEIDENTITYCONFIG']._serialized_start=850
+  _globals['_EDGEIDENTITYCONFIG']._serialized_end=934
+  _globals['_LISTIDENTITYCONFIGSREQUEST']._serialized_start=936
+  _globals['_LISTIDENTITYCONFIGSREQUEST']._serialized_end=980
+  _globals['_LISTIDENTITYCONFIGSRESPONSE']._serialized_start=983
+  _globals['_LISTIDENTITYCONFIGSRESPONSE']._serialized_end=1128
+  _globals['_DELETEVERTEXIDENTITYCONFIGREQUEST']._serialized_start=1130
+  _globals['_DELETEVERTEXIDENTITYCONFIGREQUEST']._serialized_end=1216
+  _globals['_DELETEVERTEXIDENTITYCONFIGRESPONSE']._serialized_start=1218
+  _globals['_DELETEVERTEXIDENTITYCONFIGRESPONSE']._serialized_end=1271
+  _globals['_DELETEEDGEIDENTITYCONFIGREQUEST']._serialized_start=1273
+  _globals['_DELETEEDGEIDENTITYCONFIGREQUEST']._serialized_end=1360
+  _globals['_DELETEEDGEIDENTITYCONFIGRESPONSE']._serialized_start=1362
+  _globals['_DELETEEDGEIDENTITYCONFIGRESPONSE']._serialized_end=1413
+  _globals['_DDLSERVICE']._serialized_start=1416
+  _globals['_DDLSERVICE']._serialized_end=2286
 # @@protoc_insertion_point(module_scope)

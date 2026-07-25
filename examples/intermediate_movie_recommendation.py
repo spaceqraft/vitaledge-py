@@ -404,38 +404,42 @@ def ensure_ingest_indexes(client: VitalEdgeClient) -> dict:
         return summary
 
     specs = [
-        ("Vertex", "Movie", "movie_id"),
-        ("Vertex", "User", "user_id"),
-        ("Vertex", "Genre", "genre"),
-        ("Vertex", "Movie", "year"),
-        ("Vertex", "Movie", "num_ratings"),
-        ("Edge", "RATED", "rating"),
+        ("VertexIdentity", "Movie", "movie_id"),
+        ("VertexIdentity", "User", "user_id"),
+        ("VertexIdentity", "Genre", "genre"),
+        ("VertexIndex", "Movie", "year"),
+        ("VertexIndex", "Movie", "num_ratings"),
+        ("EdgeIndex", "RATED", "rating"),
     ]
-    for index_type, schema, property_name in specs:
+    for schema, label, property_name in specs:
         summary["attempted"] += 1
         try:
-            if index_type == "Vertex":
+            if index_type == "VertexIndex":
               result = client.create_vertex_property_index(
                     schema=schema,
                     property=property_name,
                     if_not_exists=True,
                 )
-            else:
+            elif index_type == "EdgeIndex":
               result = client.create_edge_property_index(
                     schema=schema,
                     property=property_name,
                     if_not_exists=True,
                 )
-
+            else:
+              result = client.create_vertex_identity_config(
+                    schema=label,
+                     properties=[property_name],
+                     if_not_exists=True,
+                )
             state = "created" if result["created"] else "already exists"
             if result["created"]:
                 summary["created"] += 1
             else:
                 summary["existing"] += 1
             print(
-                "  Index "
+                "  Identity "
                 f"{schema}.{property_name}: {state} "
-                f"(indexed_entities={result['indexed_entities']})"
             )
         except grpc.RpcError as exc:
             summary["failed"] += 1
