@@ -404,16 +404,16 @@ def ensure_ingest_indexes(client: VitalEdgeClient) -> dict:
         return summary
 
     specs = [
-        ("Movie", "movie_id"),
-        ("User", "user_id"),
-        ("Genre", "genre"),
+        ("VertexIdentity", "Movie", "movie_id"),
+        ("VertexIdentity", "User", "user_id"),
+        ("VertexIdentity", "Genre", "genre"),
     ]
-    for schema, property_name in specs:
+    for schema, label, property_name in specs:
         summary["attempted"] += 1
         try:
-            result = client.create_property_index(
-                schema=schema,
-                property=property_name,
+            result = client.create_vertex_identity_config(
+                schema=label,
+                properties=[property_name],
                 if_not_exists=True,
             )
             state = "created" if result["created"] else "already exists"
@@ -422,9 +422,8 @@ def ensure_ingest_indexes(client: VitalEdgeClient) -> dict:
             else:
                 summary["existing"] += 1
             print(
-                "  Index "
+                "  Identity "
                 f"{schema}.{property_name}: {state} "
-                f"(indexed_entities={result['indexed_entities']})"
             )
         except grpc.RpcError as exc:
             summary["failed"] += 1

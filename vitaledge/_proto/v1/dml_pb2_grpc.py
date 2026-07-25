@@ -3,9 +3,9 @@
 import grpc
 import warnings
 
-from vitaledge._proto.v1 import query_pb2 as vitaledge_dot_v1_dot_query__pb2
+from vitaledge._proto.v1 import dml_pb2 as vitaledge_dot_v1_dot_dml__pb2
 
-GRPC_GENERATED_VERSION = '1.80.0'
+GRPC_GENERATED_VERSION = '1.83.0'
 GRPC_VERSION = grpc.__version__
 _version_not_supported = False
 
@@ -18,14 +18,14 @@ except ImportError:
 if _version_not_supported:
     raise RuntimeError(
         f'The grpc package installed is at version {GRPC_VERSION},'
-        + ' but the generated code in vitaledge/v1/query_pb2_grpc.py depends on'
+        + ' but the generated code in vitaledge/v1/dml_pb2_grpc.py depends on'
         + f' grpcio>={GRPC_GENERATED_VERSION}.'
         + f' Please upgrade your grpc module to grpcio>={GRPC_GENERATED_VERSION}'
         + f' or downgrade your generated code using grpcio-tools<={GRPC_VERSION}.'
     )
 
 
-class QueryServiceStub(object):
+class DmlServiceStub:
     """Missing associated documentation comment in .proto file."""
 
     def __init__(self, channel):
@@ -35,28 +35,23 @@ class QueryServiceStub(object):
             channel: A grpc.Channel.
         """
         self.Execute = channel.unary_unary(
-                '/vitaledge.v1.QueryService/Execute',
-                request_serializer=vitaledge_dot_v1_dot_query__pb2.QueryRequest.SerializeToString,
-                response_deserializer=vitaledge_dot_v1_dot_query__pb2.QueryResponse.FromString,
+                '/vitaledge.v1.DmlService/Execute',
+                request_serializer=vitaledge_dot_v1_dot_dml__pb2.QueryRequest.SerializeToString,
+                response_deserializer=vitaledge_dot_v1_dot_dml__pb2.QueryResponse.FromString,
                 _registered_method=True)
         self.Explain = channel.unary_unary(
-                '/vitaledge.v1.QueryService/Explain',
-                request_serializer=vitaledge_dot_v1_dot_query__pb2.QueryRequest.SerializeToString,
-                response_deserializer=vitaledge_dot_v1_dot_query__pb2.ExplainResponse.FromString,
+                '/vitaledge.v1.DmlService/Explain',
+                request_serializer=vitaledge_dot_v1_dot_dml__pb2.QueryRequest.SerializeToString,
+                response_deserializer=vitaledge_dot_v1_dot_dml__pb2.ExplainResponse.FromString,
                 _registered_method=True)
         self.GetCapabilities = channel.unary_unary(
-                '/vitaledge.v1.QueryService/GetCapabilities',
-                request_serializer=vitaledge_dot_v1_dot_query__pb2.CapabilitiesRequest.SerializeToString,
-                response_deserializer=vitaledge_dot_v1_dot_query__pb2.CapabilitiesResponse.FromString,
-                _registered_method=True)
-        self.CreatePropertyIndex = channel.unary_unary(
-                '/vitaledge.v1.QueryService/CreatePropertyIndex',
-                request_serializer=vitaledge_dot_v1_dot_query__pb2.CreatePropertyIndexRequest.SerializeToString,
-                response_deserializer=vitaledge_dot_v1_dot_query__pb2.CreatePropertyIndexResponse.FromString,
+                '/vitaledge.v1.DmlService/GetCapabilities',
+                request_serializer=vitaledge_dot_v1_dot_dml__pb2.CapabilitiesRequest.SerializeToString,
+                response_deserializer=vitaledge_dot_v1_dot_dml__pb2.CapabilitiesResponse.FromString,
                 _registered_method=True)
 
 
-class QueryServiceServicer(object):
+class DmlServiceServicer:
     """Missing associated documentation comment in .proto file."""
 
     def Execute(self, request, context):
@@ -77,44 +72,33 @@ class QueryServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def CreatePropertyIndex(self, request, context):
-        """Missing associated documentation comment in .proto file."""
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
 
-
-def add_QueryServiceServicer_to_server(servicer, server):
+def add_DmlServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'Execute': grpc.unary_unary_rpc_method_handler(
                     servicer.Execute,
-                    request_deserializer=vitaledge_dot_v1_dot_query__pb2.QueryRequest.FromString,
-                    response_serializer=vitaledge_dot_v1_dot_query__pb2.QueryResponse.SerializeToString,
+                    request_deserializer=vitaledge_dot_v1_dot_dml__pb2.QueryRequest.FromString,
+                    response_serializer=vitaledge_dot_v1_dot_dml__pb2.QueryResponse.SerializeToString,
             ),
             'Explain': grpc.unary_unary_rpc_method_handler(
                     servicer.Explain,
-                    request_deserializer=vitaledge_dot_v1_dot_query__pb2.QueryRequest.FromString,
-                    response_serializer=vitaledge_dot_v1_dot_query__pb2.ExplainResponse.SerializeToString,
+                    request_deserializer=vitaledge_dot_v1_dot_dml__pb2.QueryRequest.FromString,
+                    response_serializer=vitaledge_dot_v1_dot_dml__pb2.ExplainResponse.SerializeToString,
             ),
             'GetCapabilities': grpc.unary_unary_rpc_method_handler(
                     servicer.GetCapabilities,
-                    request_deserializer=vitaledge_dot_v1_dot_query__pb2.CapabilitiesRequest.FromString,
-                    response_serializer=vitaledge_dot_v1_dot_query__pb2.CapabilitiesResponse.SerializeToString,
-            ),
-            'CreatePropertyIndex': grpc.unary_unary_rpc_method_handler(
-                    servicer.CreatePropertyIndex,
-                    request_deserializer=vitaledge_dot_v1_dot_query__pb2.CreatePropertyIndexRequest.FromString,
-                    response_serializer=vitaledge_dot_v1_dot_query__pb2.CreatePropertyIndexResponse.SerializeToString,
+                    request_deserializer=vitaledge_dot_v1_dot_dml__pb2.CapabilitiesRequest.FromString,
+                    response_serializer=vitaledge_dot_v1_dot_dml__pb2.CapabilitiesResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'vitaledge.v1.QueryService', rpc_method_handlers)
+            'vitaledge.v1.DmlService', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
-    server.add_registered_method_handlers('vitaledge.v1.QueryService', rpc_method_handlers)
+    server.add_registered_method_handlers('vitaledge.v1.DmlService', rpc_method_handlers)
 
 
  # This class is part of an EXPERIMENTAL API.
-class QueryService(object):
+class DmlService:
     """Missing associated documentation comment in .proto file."""
 
     @staticmethod
@@ -131,9 +115,9 @@ class QueryService(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/vitaledge.v1.QueryService/Execute',
-            vitaledge_dot_v1_dot_query__pb2.QueryRequest.SerializeToString,
-            vitaledge_dot_v1_dot_query__pb2.QueryResponse.FromString,
+            '/vitaledge.v1.DmlService/Execute',
+            vitaledge_dot_v1_dot_dml__pb2.QueryRequest.SerializeToString,
+            vitaledge_dot_v1_dot_dml__pb2.QueryResponse.FromString,
             options,
             channel_credentials,
             insecure,
@@ -158,9 +142,9 @@ class QueryService(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/vitaledge.v1.QueryService/Explain',
-            vitaledge_dot_v1_dot_query__pb2.QueryRequest.SerializeToString,
-            vitaledge_dot_v1_dot_query__pb2.ExplainResponse.FromString,
+            '/vitaledge.v1.DmlService/Explain',
+            vitaledge_dot_v1_dot_dml__pb2.QueryRequest.SerializeToString,
+            vitaledge_dot_v1_dot_dml__pb2.ExplainResponse.FromString,
             options,
             channel_credentials,
             insecure,
@@ -185,36 +169,9 @@ class QueryService(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/vitaledge.v1.QueryService/GetCapabilities',
-            vitaledge_dot_v1_dot_query__pb2.CapabilitiesRequest.SerializeToString,
-            vitaledge_dot_v1_dot_query__pb2.CapabilitiesResponse.FromString,
-            options,
-            channel_credentials,
-            insecure,
-            call_credentials,
-            compression,
-            wait_for_ready,
-            timeout,
-            metadata,
-            _registered_method=True)
-
-    @staticmethod
-    def CreatePropertyIndex(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(
-            request,
-            target,
-            '/vitaledge.v1.QueryService/CreatePropertyIndex',
-            vitaledge_dot_v1_dot_query__pb2.CreatePropertyIndexRequest.SerializeToString,
-            vitaledge_dot_v1_dot_query__pb2.CreatePropertyIndexResponse.FromString,
+            '/vitaledge.v1.DmlService/GetCapabilities',
+            vitaledge_dot_v1_dot_dml__pb2.CapabilitiesRequest.SerializeToString,
+            vitaledge_dot_v1_dot_dml__pb2.CapabilitiesResponse.FromString,
             options,
             channel_credentials,
             insecure,
